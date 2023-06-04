@@ -1,0 +1,139 @@
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+class Train {
+    private String trainNumber;
+    private String source;
+    private String destination;
+    private int availableSeats;
+    private int totalSeats;
+
+    public Train(String trainNumber, String source, String destination, int totalSeats) {
+        this.trainNumber = trainNumber;
+        this.source = source;
+        this.destination = destination;
+        this.totalSeats = totalSeats;
+        this.availableSeats = totalSeats;
+    }
+
+    public String getTrainNumber() {
+        return trainNumber;
+    }
+
+    public String getSource() {
+        return source;
+    }
+
+    public String getDestination() {
+        return destination;
+    }
+
+    public int getAvailableSeats() {
+        return availableSeats;
+    }
+
+    public int getTotalSeats() {
+        return totalSeats;
+    }
+
+    public void bookTicket(int seats) {
+        if (seats <= availableSeats) {
+            availableSeats -= seats;
+            System.out.println(seats + " ticket(s) booked successfully for Train " + trainNumber);
+        } else {
+            System.out.println("Not enough seats available on Train " + trainNumber);
+        }
+    }
+
+    public void cancelTicket(int seats) {
+        if (seats <= (totalSeats - availableSeats)) {
+            availableSeats += seats;
+            System.out.println(seats + " ticket(s) cancelled successfully for Train " + trainNumber);
+        } else {
+            System.out.println("Invalid number of tickets to cancel for Train " + trainNumber);
+        }
+    }
+}
+
+class ReservationSystem {
+    private List<Train> trains;
+
+    public ReservationSystem() {
+        trains = new ArrayList<>();
+    }
+
+    public void addTrain(Train train) {
+        trains.add(train);
+        System.out.println("Train " + train.getTrainNumber() + " added successfully.");
+    }
+
+    public void bookTicket(String trainNumber, int seats) {
+        Train train = getTrainByNumber(trainNumber);
+        if (train != null) {
+            train.bookTicket(seats);
+        } else {
+            System.out.println("Train not found.");
+        }
+    }
+
+    public void cancelTicket(String trainNumber, int seats) {
+        Train train = getTrainByNumber(trainNumber);
+        if (train != null) {
+            train.cancelTicket(seats);
+        } else {
+            System.out.println("Train not found.");
+        }
+    }
+
+    public Train getTrainByNumber(String trainNumber) {
+        for (Train train : trains) {
+            if (train.getTrainNumber().equalsIgnoreCase(trainNumber)) {
+                return train;
+            }
+        }
+        return null;
+    }
+
+    public void displayTrainDetails() {
+        System.out.println("Train Details:");
+        for (Train train : trains) {
+            System.out.println("Train Number: " + train.getTrainNumber());
+            System.out.println("Source: " + train.getSource());
+            System.out.println("Destination: " + train.getDestination());
+            System.out.println("Available Seats: " + train.getAvailableSeats());
+            System.out.println("Total Seats: " + train.getTotalSeats());
+            System.out.println();
+        }
+    }
+}
+
+public class TrainReservationSystem {
+    public static void main(String[] args) {
+        ReservationSystem reservationSystem = new ReservationSystem();
+
+        // Add trains to the reservation system
+        Train train1 = new Train("12345", "Source1", "Destination1", 100);
+        reservationSystem.addTrain(train1);
+
+        Train train2 = new Train("67890", "Source2", "Destination2", 200);
+        reservationSystem.addTrain(train2);
+
+        // Display train details
+        reservationSystem.displayTrainDetails();
+
+        // Book tickets
+        reservationSystem.bookTicket("12345", 3);
+        reservationSystem.bookTicket("67890", 5);
+
+        // Display train details after booking tickets
+        reservationSystem.displayTrainDetails();
+
+        // Cancel tickets
+        reservationSystem.cancelTicket("12345", 2);
+        reservationSystem.cancelTicket("67890", 10);
+
+        // Display train details after cancelling tickets
+        reservationSystem.displayTrainDetails();
+    }
+}
